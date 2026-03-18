@@ -2,30 +2,34 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../core/services/users.service';
 import { User, UserGenero } from '../../models/user.model';
+import { DeleteModalComponent } from './delete-modal.component';
 
 type UserListItem = User & {
-  // Campo temporário para simular o layout do passo 2
   adicionadoEm?: string;
 };
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DeleteModalComponent],
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
-  users: UserListItem[] = [];
+  private readonly emptyValue = '—';
 
-  // Mock hardcoded para simulação do passo 2
+  users: UserListItem[] = [];
+  deleteDialogUser: UserListItem | null = null;
+
+  // Dados de exemplo usados somente quando não existem usuários no `localStorage`
   private readonly mockUsers: UserListItem[] = [
     {
-      id: 'u-1',
+      id: '1',
       nome: 'Anderson',
       email: 'anderson@email.com',
       funcao: 'Dev Full Stack',
       dataNascimento: '1985-08-20',
       genero: 'M',
+      createdAt: '2024-09-01T10:00:00.000Z',
       cep: '98765-432',
       logradouro: 'Rua Pudim, nº 125',
       bairro: 'Centro',
@@ -34,86 +38,138 @@ export class UsersComponent implements OnInit {
       adicionadoEm: '01/09/2024',
     },
     {
-      id: 'u-2',
+      id: '2',
       nome: 'Matheus',
       email: 'matheus@email.com',
       funcao: 'Dev Front-end',
       dataNascimento: '1998-07-15',
       genero: 'M',
+      createdAt: '2024-09-01T10:01:00.000Z',
       cep: '98765-432',
       logradouro: 'Rua Pudim, nº 125',
       bairro: 'Centro',
       cidade: 'Natal',
       estado: 'RN',
-      adicionadoEm: '01/09/2024',
+      adicionadoEm: '05/09/2024',
     },
     {
-      id: 'u-3',
+      id: '3',
       nome: 'Cibele',
       email: 'cibele@email.com',
       funcao: 'UX/UI Designer',
       dataNascimento: '1995-10-01',
       genero: 'F',
+      createdAt: '2024-09-01T10:02:00.000Z',
       cep: '98765-432',
       logradouro: 'Rua Pudim, nº 125',
       bairro: 'Centro',
       cidade: 'Natal',
       estado: 'RN',
-      adicionadoEm: '01/09/2024',
+      adicionadoEm: '04/09/2024',
     },
   ];
 
-  private readonly avatarSrcByGenero: Record<UserGenero, string> = {
+  private readonly avatarByGenero: Record<UserGenero, string> = {
     M: '/avatars/Masculino.png',
     F: '/avatars/Feminino.png',
   };
 
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   ngOnInit(): void {
-    // Simulação do passo 2
-    this.seedMockUsersIfEmpty();
+    this.initializeUsers();
     this.loadUsers();
   }
 
-  private seedMockUsersIfEmpty(): void {
-    const existing = this.usersService.getUsers();
-    if (existing.length > 0) return;
-
-    // Mock com o campo extra 'adicionadoEm' para suportar o layout
-    this.usersService.saveUsers(this.mockUsers);
-  }
-
-  private loadUsers(): void {
-    // Mapeia os dados salvos para incluir 'adicionadoEm' (quando existir)
-    // Mantém a lista tipada e evita casts inseguros.
-    const users = this.usersService.getUsers().map((u) => {
-      const maybeAdicionadoEm = (u as { adicionadoEm?: string }).adicionadoEm;
-      return {
-        ...u,
-        adicionadoEm: maybeAdicionadoEm,
-      };
-    });
-
-    this.users = users.reverse();
-  }
-
   getAvatarSrc(genero: UserGenero): string {
-    return this.avatarSrcByGenero[genero];
+    return this.avatarByGenero[genero];
   }
 
   getAge(dataNascimento: string): string {
-    if (!dataNascimento) return '—';
-    const d = new Date(dataNascimento);
-    if (Number.isNaN(d.getTime())) return '—';
+    if (!dataNascimento) return this.emptyValue;
 
-    const now = new Date();
-    let age = now.getFullYear() - d.getFullYear();
-    const m = now.getMonth() - d.getMonth();
-    if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+    const birthDate = new Date(dataNascimento);
+
+    if (Number.isNaN(birthDate.getTime())) {
+      return this.emptyValue;
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const hasNotHadBirthdayYet =
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate());
+
+    if (hasNotHadBirthdayYet) {
+      age--;
+    }
+
     return `${age} anos`;
   }
-}
 
+  onEditClick(user: UserListItem): void {
+    void user; 
+  }
+
+  requestDelete(user: UserListItem): void {
+    this.deleteDialogUser = user;
+  }
+
+  cancelDelete(): void {
+    this.deleteDialogUser = null;
+  }
+
+  confirmDelete(): void {
+    if (!this.deleteDialogUser) return;
+
+    this.usersService.deleteUser(this.deleteDialogUser.id);
+    this.deleteDialogUser = null;
+    this.loadUsers();
+  }
+
+  private initializeUsers(): void {
+    const users = this.usersService.getUsers();
+
+    if (users.length === 0) {
+      this.usersService.saveUsers(this.mockUsers);
+    }
+  }
+
+  private loadUsers(): void {
+    const users = this.usersService.getUsers();
+
+    this.users = users
+      .map((user) => this.mapUserToListItem(user))
+      .reverse();
+  }
+
+  private mapUserToListItem(user: User): UserListItem {
+    const fallbackDate = (user as Partial<UserListItem>).adicionadoEm;
+    const formattedCreatedAt = this.formatDateBR(user.createdAt);
+    const adicionadoEm =
+      formattedCreatedAt !== this.emptyValue ? formattedCreatedAt : fallbackDate ?? this.emptyValue;
+
+    return {
+      ...user,
+      adicionadoEm,
+    };
+  }
+
+  private formatDateBR(date: string): string {
+    if (!date) return this.emptyValue;
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return this.emptyValue;
+    }
+
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+    const year = parsedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+}
