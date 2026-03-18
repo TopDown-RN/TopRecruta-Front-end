@@ -7,6 +7,7 @@ export interface User {
   funcao: string;
   dataNascimento: string;
   genero: UserGenero;
+  createdAt: string;
   cep: string;
   logradouro: string;
   bairro: string;
