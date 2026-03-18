@@ -1,0 +1,32 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" (click)="onBackdropClick()"
+  role="dialog" aria-modal="true">
+  <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg ring-1 ring-gray-200" (click)="onDialogClick($event)">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 class="text-base font-semibold text-[#000C2F]">Excluir usuário</h2>
+        <p class="mt-1 text-xs text-gray-600">
+          Tem certeza que deseja excluir <strong>{{ userName }}</strong>?
+        </p>
+      </div>
+
+      <button type="button" class="cursor-pointer h-7 w-7 rounded-md hover:bg-gray-100 focus:outline-none"
+        (click)="onCancelClick()" aria-label="Fechar">
+        <span class="text-gray-500 text-xl leading-none">×</span>
+      </button>
+    </div>
+
+    <div class="mt-6 flex gap-3 justify-center">
+      <button type="button"
+        class="cursor-pointer h-9 rounded-md border border-[#048ABF] px-4 text-xs text-[#048ABF] transition hover:bg-[#048ABF]/10 focus:outline-none"
+        (click)="onCancelClick()">
+        Cancelar
+      </button>
+
+      <button type="button"
+        class="cursor-pointer h-9 rounded-md bg-red-700 px-6 text-xs text-white transition hover:brightness-95 focus:outline-none"
+        (click)="onConfirmClick()">
+        Excluir
+      </button>
+    </div>
+  </div>
+</div>
