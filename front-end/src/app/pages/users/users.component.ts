@@ -9,12 +9,12 @@ type UserListItem = User & {
 };
 
 @Component({
-  selector: 'app-users-list',
+  selector: 'app-users',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './users-list.component.html',
+  templateUrl: './users.component.html',
 })
-export class UsersListComponent implements OnInit {
+export class UsersComponent implements OnInit {
   users: UserListItem[] = [];
 
   // Mock hardcoded para simulação do passo 2
@@ -73,7 +73,7 @@ export class UsersListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Simulação do passo 2 
+    // Simulação do passo 2
     this.seedMockUsersIfEmpty();
     this.loadUsers();
   }
