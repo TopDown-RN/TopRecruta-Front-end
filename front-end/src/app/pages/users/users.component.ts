@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UsersService } from '../../core/services/users.service';
 import { User, UserGenero } from '../../models/user.model';
 import { DeleteModalComponent } from './delete-modal.component';
 
+// Usuário com campo opcional de data formatada para exibição (Adicionado em)
 type UserListItem = User & {
   adicionadoEm?: string;
 };
@@ -11,80 +13,36 @@ type UserListItem = User & {
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, DeleteModalComponent],
+  imports: [CommonModule, RouterLink, DeleteModalComponent],
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
+  // Valor exibido quando não há data ou idade válida
   private readonly emptyValue = '—';
 
+  // Lista de usuários exibida na tela 
   users: UserListItem[] = [];
+  // Usuário selecionado para exclusão; quando preenchido, o modal de confirmação é exibido
   deleteDialogUser: UserListItem | null = null;
 
-  // Dados de exemplo usados somente quando não existem usuários no `localStorage`
-  private readonly mockUsers: UserListItem[] = [
-    {
-      id: '1',
-      nome: 'Anderson',
-      email: 'anderson@email.com',
-      funcao: 'Dev Full Stack',
-      dataNascimento: '1985-08-20',
-      genero: 'M',
-      createdAt: '2024-09-01T10:00:00.000Z',
-      cep: '98765-432',
-      logradouro: 'Rua Pudim, nº 125',
-      bairro: 'Centro',
-      cidade: 'Natal',
-      estado: 'RN',
-      adicionadoEm: '01/09/2024',
-    },
-    {
-      id: '2',
-      nome: 'Matheus',
-      email: 'matheus@email.com',
-      funcao: 'Dev Front-end',
-      dataNascimento: '1998-07-15',
-      genero: 'M',
-      createdAt: '2024-09-01T10:01:00.000Z',
-      cep: '98765-432',
-      logradouro: 'Rua Pudim, nº 125',
-      bairro: 'Centro',
-      cidade: 'Natal',
-      estado: 'RN',
-      adicionadoEm: '05/09/2024',
-    },
-    {
-      id: '3',
-      nome: 'Cibele',
-      email: 'cibele@email.com',
-      funcao: 'UX/UI Designer',
-      dataNascimento: '1995-10-01',
-      genero: 'F',
-      createdAt: '2024-09-01T10:02:00.000Z',
-      cep: '98765-432',
-      logradouro: 'Rua Pudim, nº 125',
-      bairro: 'Centro',
-      cidade: 'Natal',
-      estado: 'RN',
-      adicionadoEm: '04/09/2024',
-    },
-  ];
-
+  // Caminho dos avatares conforme o gênero
   private readonly avatarByGenero: Record<UserGenero, string> = {
     M: '/avatars/Masculino.png',
     F: '/avatars/Feminino.png',
   };
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   ngOnInit(): void {
-    this.initializeUsers();
     this.loadUsers();
   }
 
+  // Retorna a URL do avatar conforme o gênero do usuário
   getAvatarSrc(genero: UserGenero): string {
     return this.avatarByGenero[genero];
   }
 
+  // Calcula e retorna a idade em anos a partir da data de nascimento (formato ISO ou DD/MM/AAAA)
   getAge(dataNascimento: string): string {
     if (!dataNascimento) return this.emptyValue;
 
@@ -109,18 +67,22 @@ export class UsersComponent implements OnInit {
     return `${age} anos`;
   }
 
+  // Ação do botão editar (não implementada)
   onEditClick(user: UserListItem): void {
-    void user; 
+    void user;
   }
 
+  // Abre o modal de confirmação de exclusão para o usuário informado
   requestDelete(user: UserListItem): void {
     this.deleteDialogUser = user;
   }
 
+  // Fecha o modal de exclusão sem remover o usuário
   cancelDelete(): void {
     this.deleteDialogUser = null;
   }
 
+  // Confirma a exclusão, remove o usuário do localStorage e recarrega a lista
   confirmDelete(): void {
     if (!this.deleteDialogUser) return;
 
@@ -129,14 +91,7 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  private initializeUsers(): void {
-    const users = this.usersService.getUsers();
-
-    if (users.length === 0) {
-      this.usersService.saveUsers(this.mockUsers);
-    }
-  }
-
+  // Carrega usuários do localStorage e exibe em ordem decrescente de criação 
   private loadUsers(): void {
     const users = this.usersService.getUsers();
 
@@ -145,6 +100,7 @@ export class UsersComponent implements OnInit {
       .reverse();
   }
 
+  // Converte User em UserListItem, preenchendo adicionadoEm (data de criação formatada em DD/MM/AAAA)
   private mapUserToListItem(user: User): UserListItem {
     const fallbackDate = (user as Partial<UserListItem>).adicionadoEm;
     const formattedCreatedAt = this.formatDateBR(user.createdAt);
@@ -157,6 +113,7 @@ export class UsersComponent implements OnInit {
     };
   }
 
+  // Formata uma data (string ISO ou similar) para DD/MM/AAAA. Retorna emptyValue se inválida
   private formatDateBR(date: string): string {
     if (!date) return this.emptyValue;
 
