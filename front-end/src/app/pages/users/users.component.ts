@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UsersService } from '../../core/services/users.service';
 import { User, UserGenero } from '../../models/user.model';
-import { DeleteModalComponent } from './delete-modal.component';
+import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 
 // Usuário com campo opcional de data formatada para exibição (Adicionado em)
 type UserListItem = User & {
