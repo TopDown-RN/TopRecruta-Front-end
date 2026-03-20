@@ -49,6 +49,23 @@ export class UsersService {
     this.saveUsers(users);
   }
 
+  updateUser(user: User): void {
+    if (!user?.id) {
+      return;
+    }
+
+    const users = this.getUsers();
+    const idx = users.findIndex((u) => u.id === user.id);
+
+    if (idx >= 0) {
+      users[idx] = user;
+    } else {
+      users.push(user);
+    }
+
+    this.saveUsers(users);
+  }
+
   deleteUser(id: string): void {
     if (!id) {
       return;
