@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UsersService } from '../../core/services/users.service';
 import { User, UserGenero } from '../../models/user.model';
+import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 
 // Usuário com campo opcional de data formatada para exibição (Adicionado em)
@@ -13,7 +14,7 @@ type UserListItem = User & {
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, RouterLink, DeleteModalComponent],
+  imports: [CommonModule, RouterLink, DeleteModalComponent, EditModalComponent],
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
@@ -24,6 +25,8 @@ export class UsersComponent implements OnInit {
   users: UserListItem[] = [];
   // Usuário selecionado para exclusão; quando preenchido, o modal de confirmação é exibido
   deleteDialogUser: UserListItem | null = null;
+  // Usuário selecionado para edição; quando preenchido, o modal de edição é exibido
+  editDialogUser: UserListItem | null = null;
 
   // Caminho dos avatares conforme o gênero
   private readonly avatarByGenero: Record<UserGenero, string> = {
@@ -69,7 +72,7 @@ export class UsersComponent implements OnInit {
 
   // Ação do botão editar (não implementada)
   onEditClick(user: UserListItem): void {
-    void user;
+    this.editDialogUser = user;
   }
 
   // Abre o modal de confirmação de exclusão para o usuário informado
@@ -88,6 +91,16 @@ export class UsersComponent implements OnInit {
 
     this.usersService.deleteUser(this.deleteDialogUser.id);
     this.deleteDialogUser = null;
+    this.loadUsers();
+  }
+
+  cancelEdit(): void {
+    this.editDialogUser = null;
+  }
+
+  confirmEdit(updatedUser: User): void {
+    this.usersService.updateUser(updatedUser);
+    this.editDialogUser = null;
     this.loadUsers();
   }
 

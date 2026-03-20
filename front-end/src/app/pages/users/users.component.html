@@ -98,3 +98,6 @@
 
 <delete-modal *ngIf="deleteDialogUser" [userName]="deleteDialogUser.nome" (cancel)="cancelDelete()"
   (confirm)="confirmDelete()"></delete-modal>
+
+<edit-modal *ngIf="editDialogUser" [user]="editDialogUser" (cancel)="cancelEdit()"
+  (save)="confirmEdit($event)"></edit-modal>
