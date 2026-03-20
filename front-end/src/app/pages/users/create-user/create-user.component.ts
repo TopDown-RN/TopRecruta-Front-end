@@ -164,6 +164,9 @@ export class CreateUserComponent implements OnInit {
     });
     this.setAddressFieldsDisabled();
     this.form.controls.genero.setValue('M');
+    // Garante que "Limpar" volte a deixar o formulário sem alterações
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
   }
 
   // Navega de volta para a listagem de usuários sem salvar

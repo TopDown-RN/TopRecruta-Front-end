@@ -143,12 +143,12 @@
         Cancelar
       </button>
       <div class="flex flex-wrap items-center gap-3">
-        <button type="button" (click)="clearForm()"
-          class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#B5B5B5] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2">
+        <button type="button" (click)="clearForm()" [disabled]="!form.dirty"
+          class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#B5B5B5] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
           Limpar
         </button>
-        <button type="submit" form="createUserForm"
-          class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#048ABF] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/40 focus-visible:ring-offset-2">
+        <button type="submit" form="createUserForm" [disabled]="!form.dirty"
+          class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#048ABF] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
           Salvar
         </button>
       </div>
