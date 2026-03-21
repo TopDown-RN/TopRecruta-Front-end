@@ -42,12 +42,22 @@ export class ListUserComponent implements OnInit {
     const target = this.deleteDialogUser;
     if (!target) return;
 
-    this.usersService.deleteUser(target.id);
-    this.deleteDialogUser = null;
-    this.loadUsers();
+    this.usersService.deleteUser(target.id).subscribe({
+      next: () => {
+        this.deleteDialogUser = null;
+        this.loadUsers();
+      },
+    });
   }
 
   private loadUsers(): void {
-    this.users = this.usersService.getUsers().reverse();
+    this.usersService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+      },
+      error: () => {
+        this.users = [];
+      },
+    });
   }
 }

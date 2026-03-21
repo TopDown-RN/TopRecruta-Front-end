@@ -1,36 +1,38 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, catchError, map, of, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-const AUTH_KEY = 'auth';
-const VALID_USERNAME = 'admin';
-const VALID_PASSWORD = '123456';
+const TOKEN_KEY = 'access_token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  /**
-   * Tenta fazer login com as credenciais informadas.
-   * Para este teste, aceita apenas usuário "admin" e senha "123456".
-   */
-  login(username: string, password: string): boolean {
-    if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-      localStorage.setItem(AUTH_KEY, 'true');
-      return true;
-    }
-    return false;
+  private readonly http = inject(HttpClient);
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http
+      .post<{ accessToken: string }>(`${environment.apiUrl}/auth/login`, {
+        username,
+        password,
+      })
+      .pipe(
+        tap((res) => localStorage.setItem(TOKEN_KEY, res.accessToken)),
+        map(() => true),
+        catchError(() => of(false)),
+      );
   }
 
-  /**
-   * Verifica se o usuário está autenticado (existe valor no localStorage).
-   */
+  getToken(): string | null {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
   isAuthenticated(): boolean {
-    return localStorage.getItem(AUTH_KEY) === 'true';
+    return !!this.getToken();
   }
 
-  /**
-   * Remove a autenticação e limpa o localStorage.
-   */
   logout(): void {
-    localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(TOKEN_KEY);
   }
 }

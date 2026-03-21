@@ -21,7 +21,7 @@ import {
 import { userFormControlMessage } from '../../../core/utils/user-form-errors.util';
 import {
   UserFormRawValue,
-  userFromFormRaw,
+  buildCreateUserBody,
 } from '../../../core/utils/user-form-payload.util';
 import { User, FUNCOES_OPCOES, NOME_MAX_LENGTH } from '../../../models/user.model';
 import { buildUserFormGroup } from './user-form.factory';
@@ -228,14 +228,17 @@ export class UserFormComponent implements OnInit {
       return;
     }
 
-    const user = userFromFormRaw(raw, this.userToEdit);
+    const body = buildCreateUserBody(raw);
 
     if (this.isEditMode && this.userToEdit) {
-      this.usersService.updateUser(user);
-    } else {
-      this.usersService.addUser(user);
+      this.usersService.updateUser(this.userToEdit.id, body).subscribe({
+        next: () => this.saved.emit(),
+      });
+      return;
     }
 
-    this.saved.emit();
+    this.usersService.createUser(body).subscribe({
+      next: () => this.saved.emit(),
+    });
   }
 }

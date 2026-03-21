@@ -30,10 +30,14 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
 
     const { username, password } = this.loginForm.getRawValue();
-    if (this.auth.login(username, password)) {
-      this.router.navigate(['/users']);
-    } else {
-      this.errorMessage = 'Usuário ou senha inválidos. Tente novamente.';
-    }
+    this.auth.login(username, password).subscribe({
+      next: (ok) => {
+        if (ok) {
+          void this.router.navigate(['/users']);
+        } else {
+          this.errorMessage = 'Usuário ou senha inválidos. Tente novamente.';
+        }
+      },
+    });
   }
 }

@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: toprecruta
+      POSTGRES_PASSWORD: toprecruta
+      POSTGRES_DB: toprecruta
+    ports:
+      - '5432:5432'
+    volumes:
+      - toprecruta_pg:/var/lib/postgresql/data
+
+volumes:
+  toprecruta_pg:

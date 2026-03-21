@@ -24,13 +24,18 @@ export class EditUserComponent implements OnInit {
       return;
     }
 
-    const found = this.usersService.getUserById(id);
-    if (!found) {
-      void this.router.navigate(['/users']);
-      return;
-    }
-
-    this.user = found;
+    this.usersService.getUserById(id).subscribe({
+      next: (found) => {
+        if (!found) {
+          void this.router.navigate(['/users']);
+          return;
+        }
+        this.user = found;
+      },
+      error: () => {
+        void this.router.navigate(['/users']);
+      },
+    });
   }
 
   onSaved(): void {
