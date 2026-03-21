@@ -23,7 +23,7 @@ import {
   UserFormRawValue,
   userFromFormRaw,
 } from '../../../core/utils/user-form-payload.util';
-import { User, FUNCOES_OPCOES, NOME_MAX_LENGTH, EMAIL_MAX_LENGTH } from '../../../models/user.model';
+import { User, FUNCOES_OPCOES, NOME_MAX_LENGTH } from '../../../models/user.model';
 import { buildUserFormGroup } from './user-form.factory';
 
 const CEP_DEBOUNCE_MS = 400;
@@ -47,7 +47,6 @@ export class UserFormComponent implements OnInit {
 
   readonly funcoesOpcoes = FUNCOES_OPCOES;
   readonly nomeMaxLength = NOME_MAX_LENGTH;
-  readonly emailMaxLength = EMAIL_MAX_LENGTH;
 
   cepLoading = false;
   cepError: string | null = null;
@@ -76,7 +75,6 @@ export class UserFormComponent implements OnInit {
     this.form.patchValue(
       {
         nome: user.nome ?? '',
-        email: user.email ?? '',
         funcao: user.funcao ?? '',
         dataNascimento: isoDateToBirthDisplay(user.dataNascimento),
         genero: user.genero ?? 'M',
@@ -102,7 +100,6 @@ export class UserFormComponent implements OnInit {
     this.form.reset(
       {
         nome: '',
-        email: '',
         funcao: '',
         dataNascimento: '',
         genero: 'M',

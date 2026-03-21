@@ -18,9 +18,6 @@ export interface User {
 // Limite de caracteres para nome
 export const NOME_MAX_LENGTH = 100;
 
-// Limite de caracteres para e-mail 
-export const EMAIL_MAX_LENGTH = 254;
-
 // Opções do dropdown de funções
 export const FUNCOES_OPCOES = [
   'Dev Back-end',

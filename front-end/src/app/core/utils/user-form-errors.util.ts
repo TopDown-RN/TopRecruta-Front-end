@@ -10,7 +10,6 @@ export function userFormControlMessage(
   if (errors['maxlength']) {
     return `Máximo de ${errors['maxlength'].requiredLength} caracteres.`;
   }
-  if (errors['email']) return 'Informe um e-mail válido.';
   if (errors['pattern']) return 'CEP deve ter 8 dígitos.';
   if (errors['birthDateIncomplete'])
     return 'Informe a data completa (DD/MM/AAAA).';

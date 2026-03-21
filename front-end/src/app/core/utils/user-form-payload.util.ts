@@ -5,7 +5,6 @@ import { birthDisplayToIso } from './birth-date-form.util';
 // Saída de `form.getRawValue()` do formulário de usuário 
 export interface UserFormRawValue {
   nome: string;
-  email: string;
   funcao: string;
   dataNascimento: string;
   genero: 'M' | 'F';
@@ -33,7 +32,7 @@ export function userFromFormRaw(
 
   const common = {
     nome: raw.nome.trim(),
-    email: raw.email.trim(),
+    email: '',
     funcao: raw.funcao,
     dataNascimento,
     genero: raw.genero,
