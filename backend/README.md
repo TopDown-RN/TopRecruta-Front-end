@@ -1,113 +1,162 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API — TopRecruta (avaliação Top Solutions)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Back-end em **NestJS** com **Prisma** e **PostgreSQL**: autenticação JWT, CRUD de utilizadores e consulta de endereço por CEP (ViaCEP no servidor). Todas as rotas de negócio (exceto login e health) exigem **Bearer token**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Prefixo global:** `/api`
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Stack
 
-## Project setup
+| Tecnologia | Uso |
+|------------|-----|
+| NestJS 11 | HTTP, módulos, validação (`class-validator`) |
+| Prisma 5 | ORM, migrations |
+| PostgreSQL 16 | Base de dados |
+| JWT | Sessão após login |
+| Axios (Nest HttpModule) | Chamadas ao ViaCEP |
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Pré-requisitos
 
-```bash
-# development
-$ npm run start
+- **Node.js** 20+ (recomendado, alinhado ao `Dockerfile`)
+- **PostgreSQL** acessível (local, Docker ou remoto)
+- Opcional: **Docker Desktop** para subir API + Postgres com um comando
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## Variáveis de ambiente
 
-## Run tests
+Copie `.env.example` para `.env` e ajuste.
 
-```bash
-# unit tests
-$ npm run test
+| Variável | Descrição |
+|----------|-----------|
+| `DATABASE_URL` | Connection string PostgreSQL (ver `docker-compose.yml` se usar Docker) |
+| `PORT` | Porta HTTP (default `3000`) |
+| `CORS_ORIGIN` | Origem permitida no CORS (ex.: `http://localhost:4200` para Angular) |
+| `JWT_SECRET` | Segredo para assinar tokens (**obrigatório**; use valor longo e aleatório em produção) |
+| `JWT_EXPIRES_DAYS` | Validade do JWT em dias |
+| `AUTH_USERNAME` | Utilizador aceite no `POST /api/auth/login` |
+| `AUTH_PASSWORD` | Palavra-passe correspondente |
 
-# e2e tests
-$ npm run test:e2e
+Não commite o ficheiro `.env`.
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## Desenvolvimento local (sem Docker da API)
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. Instalar dependências e gerar o cliente Prisma:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   ```bash
+   npm install
+   npx prisma generate
+   ```
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+2. Garantir que o Postgres está a correr e que `DATABASE_URL` no `.env` está correto.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+3. Aplicar migrations:
 
-## Resources
+   ```bash
+   npm run prisma:migrate
+   ```
 
-Check out a few resources that may come in handy when working with NestJS:
+   (ou `npx prisma migrate dev` com nome da migration)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+4. Arrancar em modo watch:
+
+   ```bash
+   npm run start:dev
+   ```
+
+5. Verificar saúde da API:
+
+   ```bash
+   curl http://localhost:3000/api/health
+   ```
+
+---
 
 ## Docker (API + Postgres)
 
-From the `backend` directory:
+Na pasta `backend`:
 
 ```bash
 docker compose up --build
 ```
 
-- API: `http://localhost:3000/api` (health: `GET /api/health`)
-- Postgres: `localhost:5432` (user/password/db: `toprecruta`)
+- **API:** `http://localhost:3000/api`
+- **Health:** `GET http://localhost:3000/api/health` → `{"status":"ok"}`
+- **Postgres:** `localhost:5432` — utilizador, palavra-passe e base: `toprecruta`
 
-Migrations run when the API container starts (`prisma migrate deploy`). Set `JWT_SECRET` (and optionally `CORS_ORIGIN`) in your shell or a `.env` file beside `docker-compose.yml`.
+Ao iniciar, o contentor da API executa `prisma migrate deploy` antes do Nest.
 
-If you see `exec format error` on Postgres, your machine pulled an image for the wrong CPU architecture. Remove any cached Postgres image (`docker rmi postgres:16`) and run `docker compose up --build` again. Only if needed, add `platform: linux/amd64` or `platform: linux/arm64` under `postgres` and `api` to match your PC (most Windows x64 hosts use `amd64`; Apple Silicon / Windows ARM use `arm64`).
+Podes definir `JWT_SECRET` e `CORS_ORIGIN` num ficheiro `.env` ao lado de `docker-compose.yml` ou exportar no terminal.
 
-## Support
+### Problemas comuns (Docker)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **`exec format error` (Postgres):** arquitetura da imagem não coincide com o CPU. Remove imagens antigas (`docker rmi postgres:16`) e volta a subir; em último caso define `platform: linux/amd64` ou `linux/arm64` nos serviços, conforme o teu PC.
+- **`exec /docker-entrypoint.sh: no such file` (API):** normalmente **CRLF** no script no Windows; o `Dockerfile` já normaliza com `sed`. Faz rebuild sem cache na imagem da API se necessário: `docker compose build --no-cache api`.
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Endpoints (resumo)
 
-## License
+| Método | Rota | Auth | Descrição |
+|--------|------|------|-----------|
+| `GET` | `/api/health` | Não | Health check |
+| `POST` | `/api/auth/login` | Não | Body: `{ "username", "password" }` → `{ "accessToken" }` |
+| `GET` | `/api/users` | JWT | Lista utilizadores (mais recentes primeiro) |
+| `GET` | `/api/users/:id` | JWT | Detalhe (UUID) |
+| `POST` | `/api/users` | JWT | Criar (DTO validado; funções fixas do desafio) |
+| `PATCH` | `/api/users/:id` | JWT | Atualizar |
+| `DELETE` | `/api/users/:id` | JWT | Remover |
+| `GET` | `/api/cep/:cep` | JWT | Endereço (8 dígitos); ViaCEP no back-end |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Header para rotas protegidas: `Authorization: Bearer <accessToken>`.
+
+---
+
+## Scripts npm
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run start:dev` | Desenvolvimento com reload |
+| `npm run build` | Compilação TypeScript |
+| `npm run start:prod` | Executa `dist/main.js` (após `build`) |
+| `npm run lint` | ESLint |
+| `npm run test` | Testes unitários Jest |
+| `npm run test:e2e` | Testes e2e |
+| `npm run prisma:generate` | Gera cliente Prisma |
+| `npm run prisma:migrate` | Migrations em desenvolvimento |
+| `npm run prisma:deploy` | Aplica migrations (CI/produção) |
+
+---
+
+## Estrutura do código (pastas principais)
+
+```
+src/
+  auth/          # Login, JWT, guard
+  cep/           # Proxy ViaCEP
+  health/        # GET /health
+  prisma/        # PrismaService (módulo global)
+  users/         # CRUD utilizadores
+  app.setup.ts   # Prefixo api, ValidationPipe, CORS
+  main.ts
+prisma/
+  schema.prisma
+  migrations/
+```
+
+---
+
+## Documentação NestJS
+
+Documentação oficial: [https://docs.nestjs.com](https://docs.nestjs.com)
+
+---
+
+## Licença
+
+Projeto privado — avaliação técnica. Código gerado com Nest CLI sujeito à licença do próprio Nest onde aplicável.
