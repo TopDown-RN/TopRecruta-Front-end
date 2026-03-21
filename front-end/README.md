@@ -1,59 +1,24 @@
-# FrontEnd
+# Top Solutions — Front-end (Avaliação)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.2.
+Aplicação Angular para cadastro de usuários com autenticação simples, integração ViaCEP e persistência em `localStorage`.
 
-## Development server
+## Como testar 
 
-To start a local development server, run:
+1. **Login:** use usuário `admin` e senha `123456` (credenciais fixas para o desafio, definidas em `AuthService`).
+2. **Listagem:** após o login, você acessa a lista de usuários (`/users`).
+3. **Cadastro:** em **Adicionar usuário** (`/users/create`), preencha todos os campos obrigatórios. Informe um CEP válido para o ViaCEP preencher rua, bairro, cidade e estado.
+4. **Edição:** na lista, clique no ícone de editar — você será levado à **mesma tela de cadastro** com os dados preenchidos (`/users/edit/:id`).
+5. **Exclusão:** use o ícone de lixeira e confirme no modal.
+6. **Logout:** botão **Sair** no cabeçalho retorna ao login.
 
-```bash
-ng serve
-```
+Rotas de usuários (`/users`, `/users/create`, `/users/edit/:id`) exigem autenticação; acessos diretos sem login redirecionam para `/login`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Estrutura 
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `src/app/core/services/` — autenticação, usuários (`localStorage`), ViaCEP
+- `src/app/core/guards/` — proteção de rotas
+- `src/app/pages/login/` — tela de login
+- `src/app/pages/users/list-user/` — listagem (rota `/users`), modal de exclusão
+- `src/app/pages/users/user-form/` — formulário compartilhado (ViaCEP, validações, salvar)
+- `src/app/pages/users/create-user/` — página **Adicionar** (`/users/create`)
+- `src/app/pages/users/edit-user/` — página **Editar** (`/users/edit/:id`)
