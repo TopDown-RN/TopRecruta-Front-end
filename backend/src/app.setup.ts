@@ -14,7 +14,10 @@ export function configureApp(app: INestApplication): void {
     }),
   );
 
-  const origin = config.get<string>('CORS_ORIGIN') ?? 'http://localhost:4200';
+  const origin = config.get<string>('CORS_ORIGIN');
+  if (!origin) {
+    throw new Error('CORS_ORIGIN não configurado na variável de ambiente');
+  }
   app.enableCors({
     origin,
     credentials: true,
