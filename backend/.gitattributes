@@ -1,0 +1,2 @@
+# Required for Docker (Alpine/Linux); CRLF breaks shebang exec.
+*.sh text eol=lf
