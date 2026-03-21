@@ -11,11 +11,15 @@
 
     <div class="h-px w-full bg-gray-200/70 mb-4"></div>
 
-    <section *ngIf="users.length === 0" class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+    <section *ngIf="loading" class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+      <p class="text-sm text-gray-600">Carregando usuários…</p>
+    </section>
+
+    <section *ngIf="!loading && users.length === 0" class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
       <p class="text-sm text-gray-600">Nenhum usuário cadastrado.</p>
     </section>
 
-    <section *ngIf="users.length > 0">
+    <section *ngIf="!loading && users.length > 0">
       <div class="hidden md:grid grid-cols-12 px-4 pb-2 text-[11px] font-medium text-gray-400">
         <div class="col-span-3">Nome</div>
         <div class="col-span-2">Idade</div>

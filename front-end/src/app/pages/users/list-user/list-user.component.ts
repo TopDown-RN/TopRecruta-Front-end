@@ -20,6 +20,8 @@ export class ListUserComponent implements OnInit {
   private readonly usersService = inject(UsersService);
 
   users: User[] = [];
+  /** Evita mostrar "nenhum usuário" enquanto o GET /users ainda não terminou. */
+  loading = true;
   deleteDialogUser: User | null = null;
 
   readonly avatarUrl = avatarUrlForGenero;
@@ -51,12 +53,15 @@ export class ListUserComponent implements OnInit {
   }
 
   private loadUsers(): void {
+    this.loading = true;
     this.usersService.getUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.loading = false;
       },
       error: () => {
         this.users = [];
+        this.loading = false;
       },
     });
   }
