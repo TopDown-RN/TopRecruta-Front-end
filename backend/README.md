@@ -96,7 +96,7 @@ docker compose up --build
 
 Migrations run when the API container starts (`prisma migrate deploy`). Set `JWT_SECRET` (and optionally `CORS_ORIGIN`) in your shell or a `.env` file beside `docker-compose.yml`.
 
-The compose file pins `platform: linux/amd64` to avoid `exec format error` when the wrong image architecture is pulled. On **Apple Silicon** (or Windows ARM), change both services to `platform: linux/arm64` if needed.
+If you see `exec format error` on Postgres, your machine pulled an image for the wrong CPU architecture. Remove any cached Postgres image (`docker rmi postgres:16`) and run `docker compose up --build` again. Only if needed, add `platform: linux/amd64` or `platform: linux/arm64` under `postgres` and `api` to match your PC (most Windows x64 hosts use `amd64`; Apple Silicon / Windows ARM use `arm64`).
 
 ## Support
 
