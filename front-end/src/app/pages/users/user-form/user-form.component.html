@@ -1,0 +1,159 @@
+<section class="rounded-lg bg-[#F6F7F8] px-4 py-4 sm:p-6 shadow-sm ring-1 ring-gray-100">
+  <form [id]="formId" [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-12 md:items-end">
+      <div class="md:col-span-8">
+        <label for="nome" class="block text-sm font-medium text-[#6C6C6C] mb-1">Nome</label>
+        <input id="nome" type="text" formControlName="nome" placeholder="Digite o nome do usuário"
+          class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm placeholder:text-[#CDCDCD] transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
+          [class.border-red-500]="form.get('nome')?.invalid && form.get('nome')?.touched"
+          [class.border-[#E5E5E5]]="!(form.get('nome')?.invalid && form.get('nome')?.touched)" />
+        @if (getControlError('nome')) {
+        <p class="mt-1 text-xs text-red-600">{{ getControlError('nome') }}</p>
+        }
+      </div>
+      <div class="md:col-span-4">
+        <span class="block text-sm font-medium text-[#6C6C6C] mb-2">Gênero</span>
+        <div class="flex flex-wrap gap-4 sm:gap-6">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="radio" formControlName="genero" value="M"
+              class="h-4 w-4 cursor-pointer appearance-none rounded-full border-2 border-[#048ABF] bg-white checked:bg-[#048ABF] checked:shadow-[inset_0_0_0_2px_#fff]" />
+            <span class="text-sm text-[#6C6C6C]">Masculino</span>
+          </label>
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="radio" formControlName="genero" value="F"
+              class="h-4 w-4 cursor-pointer appearance-none rounded-full border-2 border-[#048ABF] bg-white checked:bg-[#048ABF] checked:shadow-[inset_0_0_0_2px_#fff]" />
+            <span class="text-sm text-[#6C6C6C]">Feminino</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label for="email" class="block text-sm font-medium text-[#6C6C6C] mb-1">E-mail</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email"
+        [attr.maxlength]="emailMaxLength" placeholder="nome@exemplo.com"
+        class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm placeholder:text-[#CDCDCD] transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
+        [class.border-red-500]="form.get('email')?.invalid && form.get('email')?.touched"
+        [class.border-[#E5E5E5]]="!(form.get('email')?.invalid && form.get('email')?.touched)" />
+      @if (getControlError('email')) {
+      <p class="mt-1 text-xs text-red-600">{{ getControlError('email') }}</p>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label for="dataNascimento" class="block text-sm font-medium text-[#6C6C6C] mb-1">Data de nascimento</label>
+        <input id="dataNascimento" type="text" formControlName="dataNascimento" placeholder="DD/MM/AAAA"
+          maxlength="10" inputmode="numeric" (input)="onDataNascimentoInput($event)"
+          class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm placeholder:text-[#CDCDCD] transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
+          [class.border-red-500]="form.get('dataNascimento')?.invalid && form.get('dataNascimento')?.touched"
+          [class.border-[#E5E5E5]]="!(form.get('dataNascimento')?.invalid && form.get('dataNascimento')?.touched)" />
+        @if (getControlError('dataNascimento')) {
+        <p class="mt-1 text-xs text-red-600">{{ getControlError('dataNascimento') }}</p>
+        }
+      </div>
+      <div>
+        <label for="funcao" class="block text-sm font-medium text-[#6C6C6C] mb-1">Função</label>
+        <select id="funcao" formControlName="funcao"
+          class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
+          [class.border-red-500]="form.get('funcao')?.invalid && form.get('funcao')?.touched"
+          [class.border-[#E5E5E5]]="!(form.get('funcao')?.invalid && form.get('funcao')?.touched)"
+          [class.text-[#CDCDCD]]="!form.get('funcao')?.value" [class.text-[#6C6C6C]]="form.get('funcao')?.value">
+          <option value="" disabled>Selecione...</option>
+          @for (op of funcoesOpcoes; track op) {
+          <option [value]="op">{{ op }}</option>
+          }
+        </select>
+        @if (getControlError('funcao')) {
+        <p class="mt-1 text-xs text-red-600">{{ getControlError('funcao') }}</p>
+        }
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-[#6C6C6C] mb-3">Endereço</h2>
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
+          <div class="md:col-span-4">
+            <label for="cep" class="block text-sm font-medium text-[#6C6C6C] mb-1">CEP</label>
+            <div class="relative">
+              <input id="cep" type="text" formControlName="cep" placeholder="Digite o CEP" inputmode="numeric"
+                maxlength="8" (input)="onCepInput($event)" (blur)="onCepBlur()"
+                class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm placeholder:text-[#CDCDCD] transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
+                [class.border-red-500]="(form.get('cep')?.invalid && form.get('cep')?.touched) || cepError"
+                [class.border-[#E5E5E5]]="!(form.get('cep')?.invalid && form.get('cep')?.touched) && !cepError" />
+              @if (cepLoading) {
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">Buscando...</span>
+              }
+            </div>
+            @if (getControlError('cep')) {
+            <p class="mt-1 text-xs text-red-600">{{ getControlError('cep') }}</p>
+            }
+            @if (cepError && !getControlError('cep')) {
+            <p class="mt-1 text-xs text-red-600">{{ cepError }}</p>
+            }
+          </div>
+          <div class="md:col-span-8">
+            <label for="logradouro" class="block text-sm font-medium text-[#6C6C6C] mb-1">Rua</label>
+            <input id="logradouro" type="text" formControlName="logradouro"
+              class="w-full rounded-md border border-[#E5E5E5] bg-[#EBEBEC] px-3 py-2 text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-[#EBEBEC]"
+              [class.border-red-500]="form.get('logradouro')?.invalid && form.get('logradouro')?.touched"
+              [class.border-[#E5E5E5]]="!(form.get('logradouro')?.invalid && form.get('logradouro')?.touched)" />
+            @if (getControlError('logradouro')) {
+            <p class="mt-1 text-xs text-red-600">{{ getControlError('logradouro') }}</p>
+            }
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div>
+            <label for="bairro" class="block text-sm font-medium text-[#6C6C6C] mb-1">Bairro</label>
+            <input id="bairro" type="text" formControlName="bairro"
+              class="w-full rounded-md border border-[#E5E5E5] bg-[#EBEBEC] px-3 py-2 text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-[#EBEBEC]"
+              [class.border-red-500]="form.get('bairro')?.invalid && form.get('bairro')?.touched"
+              [class.border-[#E5E5E5]]="!(form.get('bairro')?.invalid && form.get('bairro')?.touched)" />
+            @if (getControlError('bairro')) {
+            <p class="mt-1 text-xs text-red-600">{{ getControlError('bairro') }}</p>
+            }
+          </div>
+          <div>
+            <label for="cidade" class="block text-sm font-medium text-[#6C6C6C] mb-1">Cidade</label>
+            <input id="cidade" type="text" formControlName="cidade"
+              class="w-full rounded-md border border-[#E5E5E5] bg-[#EBEBEC] px-3 py-2 text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-[#EBEBEC]"
+              [class.border-red-500]="form.get('cidade')?.invalid && form.get('cidade')?.touched"
+              [class.border-[#E5E5E5]]="!(form.get('cidade')?.invalid && form.get('cidade')?.touched)" />
+            @if (getControlError('cidade')) {
+            <p class="mt-1 text-xs text-red-600">{{ getControlError('cidade') }}</p>
+            }
+          </div>
+          <div>
+            <label for="estado" class="block text-sm font-medium text-[#6C6C6C] mb-1">Estado</label>
+            <input id="estado" type="text" formControlName="estado"
+              class="w-full rounded-md border border-[#E5E5E5] bg-[#EBEBEC] px-3 py-2 text-sm transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-[#EBEBEC]"
+              [class.border-red-500]="form.get('estado')?.invalid && form.get('estado')?.touched"
+              [class.border-[#E5E5E5]]="!(form.get('estado')?.invalid && form.get('estado')?.touched)" />
+            @if (getControlError('estado')) {
+            <p class="mt-1 text-xs text-red-600">{{ getControlError('estado') }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+<div class="flex flex-wrap items-center justify-between gap-3 mt-4">
+  <button type="button" (click)="cancel()"
+    class="inline-flex h-9 cursor-pointer items-center rounded-md border-2 border-[#048ABF] bg-white px-8 text-xs text-[#048ABF] transition hover:bg-[#048ABF] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#048ABF]/40 focus-visible:ring-offset-2">
+    Cancelar
+  </button>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" (click)="clearForm()" [disabled]="!form.dirty"
+      class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#B5B5B5] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+      Limpar
+    </button>
+    <button type="submit" [attr.form]="formId" [disabled]="!form.dirty"
+      class="inline-flex h-9 cursor-pointer items-center rounded-md bg-[#048ABF] px-8 text-xs text-white transition hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-600/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+      Salvar
+    </button>
+  </div>
+</div>

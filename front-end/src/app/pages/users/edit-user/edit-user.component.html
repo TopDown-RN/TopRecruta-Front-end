@@ -1,11 +1,13 @@
 <div class="bg-white px-4 py-6 sm:px-6 font-['Montserrat']">
   <div class="mx-auto w-full max-w-5xl">
+    @if (user) {
     <header class="mb-4 flex items-center justify-between">
-      <h1 class="text-lg font-bold text-[#000C2F]">Adicionar usuário</h1>
+      <h1 class="text-lg font-bold text-[#000C2F]">Editar usuário</h1>
     </header>
 
     <div class="h-px w-full bg-gray-200/70 mb-4"></div>
 
-    <app-user-form formId="createUserForm" (saved)="onSaved()" />
+    <app-user-form formId="editUserForm" [userToEdit]="user" (saved)="onSaved()" />
+    }
   </div>
 </div>

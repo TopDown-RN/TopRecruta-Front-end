@@ -1,0 +1,28 @@
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { birthDateBrValidator } from '../../../core/validators/birth-date-br.validator';
+import {
+  EMAIL_MAX_LENGTH,
+  NOME_MAX_LENGTH,
+} from '../../../models/user.model';
+
+export function buildUserFormGroup(fb: NonNullableFormBuilder) {
+  return fb.group({
+    nome: ['', [Validators.required, Validators.maxLength(NOME_MAX_LENGTH)]],
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(EMAIL_MAX_LENGTH),
+      ],
+    ],
+    funcao: ['', [Validators.required]],
+    dataNascimento: ['', [Validators.required, birthDateBrValidator()]],
+    genero: fb.control<'M' | 'F'>('M', [Validators.required]),
+    cep: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+    logradouro: [{ value: '', disabled: true }, [Validators.required]],
+    bairro: [{ value: '', disabled: true }, [Validators.required]],
+    cidade: [{ value: '', disabled: true }, [Validators.required]],
+    estado: [{ value: '', disabled: true }, [Validators.required]],
+  });
+}
