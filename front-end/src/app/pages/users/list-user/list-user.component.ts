@@ -20,7 +20,7 @@ export class ListUserComponent implements OnInit {
   private readonly usersService = inject(UsersService);
 
   users: User[] = [];
-  /** Evita mostrar "nenhum usuário" enquanto o GET /users ainda não terminou. */
+  // Evita mostrar "nenhum usuário" enquanto o GET /users ainda não terminou
   loading = true;
   deleteDialogUser: User | null = null;
 
