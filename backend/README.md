@@ -44,39 +44,6 @@ Não commite o ficheiro `.env`.
 
 ---
 
-## Desenvolvimento local (sem Docker da API)
-
-1. Instalar dependências e gerar o cliente Prisma:
-
-   ```bash
-   npm install
-   npx prisma generate
-   ```
-
-2. Garantir que o Postgres está a correr e que `DATABASE_URL` no `.env` está correto.
-
-3. Aplicar migrations:
-
-   ```bash
-   npm run prisma:migrate
-   ```
-
-   (ou `npx prisma migrate dev` com nome da migration)
-
-4. Arrancar em modo watch:
-
-   ```bash
-   npm run start:dev
-   ```
-
-5. Verificar saúde da API:
-
-   ```bash
-   curl http://localhost:3000/api/health
-   ```
-
----
-
 ## Docker (API + Postgres)
 
 Na pasta `backend`:
@@ -91,7 +58,7 @@ docker compose up --build
 
 Ao iniciar, o contentor da API executa `prisma migrate deploy` antes do Nest.
 
-Podes definir `JWT_SECRET` e `CORS_ORIGIN` num ficheiro `.env` ao lado de `docker-compose.yml` ou exportar no terminal.
+Pode definir `JWT_SECRET` e `CORS_ORIGIN` num ficheiro `.env` ao lado de `docker-compose.yml`.
 
 ### Problemas comuns (Docker)
 
@@ -117,22 +84,6 @@ Header para rotas protegidas: `Authorization: Bearer <accessToken>`.
 
 ---
 
-## Scripts npm
-
-| Comando | Descrição |
-|---------|-----------|
-| `npm run start:dev` | Desenvolvimento com reload |
-| `npm run build` | Compilação TypeScript |
-| `npm run start:prod` | Executa `dist/main.js` (após `build`) |
-| `npm run lint` | ESLint |
-| `npm run test` | Testes unitários Jest |
-| `npm run test:e2e` | Testes e2e |
-| `npm run prisma:generate` | Gera cliente Prisma |
-| `npm run prisma:migrate` | Migrations em desenvolvimento |
-| `npm run prisma:deploy` | Aplica migrations (CI/produção) |
-
----
-
 ## Estrutura do código (pastas principais)
 
 ```
@@ -154,9 +105,3 @@ prisma/
 ## Documentação NestJS
 
 Documentação oficial: [https://docs.nestjs.com](https://docs.nestjs.com)
-
----
-
-## Licença
-
-Projeto privado — avaliação técnica. Código gerado com Nest CLI sujeito à licença do próprio Nest onde aplicável.
