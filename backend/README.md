@@ -32,7 +32,7 @@ Copie `.env.example` para `.env` e ajuste.
 
 | Variável | Descrição |
 |----------|-----------|
-| `DATABASE_URL` | Connection string PostgreSQL (ver `docker-compose.yml` se usar Docker) |
+| `DATABASE_URL` | Connection string PostgreSQL. Com Docker Compose, no **host** usa `localhost:5434`; o serviço `api` dentro da rede usa `postgres:5432` (não alterar no compose). |
 | `PORT` | Porta HTTP (default `3000`) |
 | `CORS_ORIGIN` | Origem permitida no CORS (ex.: `http://localhost:4200` para Angular) |
 | `JWT_SECRET` | Segredo para assinar tokens (**obrigatório**; use valor longo e aleatório em produção) |
@@ -54,7 +54,7 @@ docker compose up --build
 
 - **API:** `http://localhost:3000/api`
 - **Health:** `GET http://localhost:3000/api/health` → `{"status":"ok"}`
-- **Postgres:** `localhost:5432` — utilizador, palavra-passe e base: `toprecruta`
+- **Postgres (no PC):** `localhost:5434` — utilizador, palavra-passe e base: `toprecruta` (no contentor continua na porta 5432; o `DATABASE_URL` da API usa o hostname `postgres`)
 
 Ao iniciar, o contentor da API executa `prisma migrate deploy` antes do Nest.
 
