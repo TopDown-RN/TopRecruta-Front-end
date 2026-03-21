@@ -96,6 +96,8 @@ docker compose up --build
 
 Migrations run when the API container starts (`prisma migrate deploy`). Set `JWT_SECRET` (and optionally `CORS_ORIGIN`) in your shell or a `.env` file beside `docker-compose.yml`.
 
+The compose file pins `platform: linux/amd64` to avoid `exec format error` when the wrong image architecture is pulled. On **Apple Silicon** (or Windows ARM), change both services to `platform: linux/arm64` if needed.
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

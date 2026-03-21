@@ -1,6 +1,8 @@
 services:
   postgres:
     image: postgres:16-alpine
+    # Avoid "exec format error" when Docker pulls the wrong architecture (e.g. ARM on AMD64 PC).
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       POSTGRES_USER: toprecruta
@@ -20,6 +22,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    platform: linux/amd64
     restart: unless-stopped
     ports:
       - '3000:3000'
