@@ -143,16 +143,26 @@ export class UserFormComponent implements OnInit {
             next: (address) => {
               this.cepLoading = false;
               if (address) {
+                const cidade = (address.cidade ?? '').trim();
+                const estado = (address.estado ?? '').trim();
+
+                // Se a resposta vier sem cidade/estado, tratamos como CEP inválido
+                if (!cidade || !estado) {
+                  this.cepError = 'CEP não encontrado. Por favor, digite um CEP válido.';
+                  this.setAddressFieldsDisabled();
+                  return;
+                }
+
                 this.form.patchValue({
                   logradouro: address.logradouro ?? '',
                   bairro: address.bairro ?? '',
-                  cidade: address.cidade ?? '',
-                  estado: address.estado ?? '',
+                  cidade,
+                  estado,
                 });
 
                 this.cepError = null;
               } else {
-                this.cepError = 'CEP não encontrado.';
+                this.cepError = 'CEP não encontrado. Por favor, digite um CEP válido.';
                 this.setAddressFieldsDisabled();
               }
             },
@@ -227,6 +237,17 @@ export class UserFormComponent implements OnInit {
     const raw = this.form.getRawValue() as UserFormRawValue;
 
     const body = buildCreateUserBody(raw);
+
+    // Evita 400 quando a busca do CEP não preenche cidade/estado
+    if (this.cepLoading) return;
+    if (this.cepError) return;
+
+    const cidade = (raw.cidade ?? '').trim();
+    const estado = (raw.estado ?? '').trim().toUpperCase();
+    if (!cidade || estado.length !== 2) {
+      this.cepError = 'CEP não encontrado. Por favor, digite um CEP válido.';
+      return;
+    }
 
     if (this.isEditMode && this.userToEdit) {
       this.usersService.updateUser(this.userToEdit.id, body).subscribe({
