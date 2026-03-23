@@ -5,6 +5,7 @@ import {
   avatarUrlForGenero,
   formatAgeFromBirth,
   formatCreatedAtBr,
+  formatCepBr,
 } from '../../../core/utils/user-list.util';
 import { UsersService } from '../../../core/services/users.service';
 import { User } from '../../../models/user.model';
@@ -27,6 +28,7 @@ export class ListUserComponent implements OnInit {
   readonly avatarUrl = avatarUrlForGenero;
   readonly ageLabel = formatAgeFromBirth;
   readonly addedAtLabel = formatCreatedAtBr;
+  readonly cepLabel = formatCepBr;
 
   ngOnInit(): void {
     this.loadUsers();

@@ -43,3 +43,13 @@ export function formatCreatedAtBr(createdAt: string): string {
   const year = parsed.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
+// CEP para exibição (formato `00000-000`)
+export function formatCepBr(cep: string): string {
+  if (!cep) return EMPTY_DISPLAY;
+
+  const digits = cep.replace(/\D/g, '').slice(0, 8);
+  if (digits.length !== 8) return digits || EMPTY_DISPLAY;
+
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+}

@@ -48,7 +48,7 @@
             </div>
 
             <div class="md:col-span-2 text-sm text-gray-500 truncate">
-              <span class="md:hidden font-semibold text-gray-400 mr-2">Função</span>{{ user.funcao || '—' }}
+              <span class="md:hidden font-semibold text-gray-400 mr-2">Função</span>{{ user.funcao }}
             </div>
 
             <div class="md:col-span-2 text-sm text-gray-500">
@@ -57,7 +57,7 @@
                 {{ user.logradouro || '—' }}, {{ user.cidade || '—' }}/{{ user.estado || '—' }}
               </div>
               <div class="text-xs text-gray-500">
-                CEP: {{ user.cep || '—' }}
+                CEP: {{ cepLabel(user.cep) }}
               </div>
             </div>
 
