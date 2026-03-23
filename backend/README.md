@@ -1,6 +1,15 @@
-# API — TopRecruta (avaliação Top Solutions)
+# Top Solutions — API 
 
-Back-end em **NestJS** com **Prisma** e **PostgreSQL**: autenticação JWT, CRUD de utilizadores e consulta de endereço por CEP (ViaCEP no servidor). Todas as rotas de negócio (exceto login e health) exigem **Bearer token**.
+Back-end em **NestJS** com **Prisma** e **PostgreSQL**: autenticação JWT, CRUD de utilizadores e consulta de endereço por CEP (ViaCEP no servidor).
+
+Todas as rotas de negócio (exceto `POST /api/auth/login` e `GET /api/health`) exigem **Bearer token**.
+
+Os usuários são persistidos no **PostgreSQL** (Prisma). O `localStorage` não é usado para armazenamento de usuários (no front-end é usado apenas o token JWT).
+
+### Nota sobre o requisito de `localStorage` do enunciado
+O enunciado solicita que os dados cadastrados sejam armazenados no `localStorage`.
+
+Neste projeto, a persistência dos usuários foi feita no **back-end (PostgreSQL/Prisma)** para também cobrir o bônus de persistência no servidor. O `localStorage` permanece restrito ao **token JWT** no front-end.
 
 **Prefixo global:** `/api`
 
@@ -28,7 +37,7 @@ Back-end em **NestJS** com **Prisma** e **PostgreSQL**: autenticação JWT, CRUD
 
 ## Variáveis de ambiente
 
-Copie `.env.example` para `.env` e ajuste.
+Copie `.env.example` para `.env`.
 
 | Variável | Descrição |
 |----------|-----------|
@@ -40,8 +49,6 @@ Copie `.env.example` para `.env` e ajuste.
 | `AUTH_USERNAME` | Utilizador aceite no `POST /api/auth/login` |
 | `AUTH_PASSWORD` | Palavra-passe correspondente |
 
-Não commite o ficheiro `.env`.
-
 ---
 
 ## Docker (API + Postgres)
@@ -51,19 +58,6 @@ Na pasta `backend`:
 ```bash
 docker compose up --build
 ```
-
-- **API:** `http://localhost:3000/api`
-- **Health:** `GET http://localhost:3000/api/health` → `{"status":"ok"}`
-- **Postgres (no PC):** `localhost:5434` — utilizador, palavra-passe e base: `toprecruta` (no contentor continua na porta 5432; o `DATABASE_URL` da API usa o hostname `postgres`)
-
-Ao iniciar, o contentor da API executa `prisma migrate deploy` antes do Nest.
-
-Pode definir `JWT_SECRET` e `CORS_ORIGIN` num ficheiro `.env` ao lado de `docker-compose.yml`.
-
-### Problemas comuns (Docker)
-
-- **`exec format error` (Postgres):** arquitetura da imagem não coincide com o CPU. Remove imagens antigas (`docker rmi postgres:16`) e volta a subir; em último caso define `platform: linux/amd64` ou `linux/arm64` nos serviços, conforme o teu PC.
-- **`exec /docker-entrypoint.sh: no such file` (API):** normalmente **CRLF** no script no Windows; o `Dockerfile` já normaliza com `sed`. Faz rebuild sem cache na imagem da API se necessário: `docker compose build --no-cache api`.
 
 ---
 
