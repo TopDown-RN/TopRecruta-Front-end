@@ -20,13 +20,13 @@
     </section>
 
     <section *ngIf="!loading && users.length > 0">
-      <div class="hidden md:grid grid-cols-12 px-4 pb-2 text-[11px] font-medium text-gray-400">
+      <div class="hidden md:grid grid-cols-12 px-4 pb-4 text-[11px] font-medium text-gray-400">
         <div class="col-span-3">Nome</div>
         <div class="col-span-2">Idade</div>
         <div class="col-span-2">Função</div>
         <div class="col-span-2">Endereço</div>
-        <div class="col-span-1">Adicionado em:</div>
-        <div class="col-span-2 text-right pr-2"></div>
+        <div class="col-span-2 whitespace-nowrap">Adicionado em:</div>
+        <div class="col-span-1 text-right pr-2"></div>
       </div>
 
       <div class="space-y-3">
@@ -61,12 +61,12 @@
               </div>
             </div>
 
-            <div class="md:col-span-1 text-sm text-gray-500">
+            <div class="md:col-span-2 text-sm text-gray-500 whitespace-nowrap">
               <span class="md:hidden font-semibold text-gray-400 mr-2">Adicionado em:</span>
               {{ addedAtLabel(user.createdAt) }}
             </div>
 
-            <div class="md:col-span-2 flex items-center justify-end gap-3">
+            <div class="md:col-span-1 flex items-center justify-end gap-2">
               <a [routerLink]="['/users/edit', user.id]"
                 class="cursor-pointer p-1.5 rounded-md hover:bg-[#3C758B]/10 focus:outline-none inline-flex"
                 aria-label="Editar usuário">
