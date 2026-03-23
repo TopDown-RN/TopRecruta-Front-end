@@ -8,6 +8,7 @@ import {
   formatCepBr,
 } from '../../../core/utils/user-list.util';
 import { UsersService } from '../../../core/services/users.service';
+import { ToastService } from 'ngx-toast-lib';
 import { User } from '../../../models/user.model';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 
@@ -19,6 +20,7 @@ import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 })
 export class ListUserComponent implements OnInit {
   private readonly usersService = inject(UsersService);
+  private readonly toastService = inject(ToastService);
 
   users: User[] = [];
   // Evita mostrar "nenhum usuário" enquanto o GET /users ainda não terminou
@@ -48,6 +50,15 @@ export class ListUserComponent implements OnInit {
 
     this.usersService.deleteUser(target.id).subscribe({
       next: () => {
+        this.toastService.add({
+          title: 'Sucesso!',
+          message: 'Usuário excluído com sucesso.',
+          type: 'custom',
+          icon: 'tabler:user-x',
+          iconColor: 'text-white',
+          bgColor: 'bg-[#3C7588]',
+          duration: 1500,
+        });
         this.deleteDialogUser = null;
         this.loadUsers();
       },

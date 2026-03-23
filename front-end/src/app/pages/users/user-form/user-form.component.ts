@@ -13,6 +13,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CepService } from '../../../core/services/cep.service';
+import { ToastService } from 'ngx-toast-lib';
 import { UsersService } from '../../../core/services/users.service';
 import {
   isoDateToBirthDisplay,
@@ -39,6 +40,7 @@ export class UserFormComponent implements OnInit {
   private readonly cepService = inject(CepService);
   private readonly usersService = inject(UsersService);
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
 
   @Input() userToEdit: User | null = null;
@@ -228,13 +230,35 @@ export class UserFormComponent implements OnInit {
 
     if (this.isEditMode && this.userToEdit) {
       this.usersService.updateUser(this.userToEdit.id, body).subscribe({
-        next: () => this.saved.emit(),
+        next: () => {
+          this.toastService.add({
+            title: 'Sucesso!',
+            message: 'Usuário editado com sucesso.',
+            type: 'custom',
+            icon: 'tabler:user-edit',
+            iconColor: 'text-white',
+            bgColor: 'bg-[#3C7588]',
+            duration: 1500,
+          });
+          this.saved.emit();
+        },
       });
       return;
     }
 
     this.usersService.createUser(body).subscribe({
-      next: () => this.saved.emit(),
+      next: () => {
+        this.toastService.add({
+          title: 'Sucesso!',
+          message: 'Usuário criado com sucesso.',
+          type: 'custom',
+          icon: 'tabler:user-plus',
+          iconColor: 'text-white',
+          bgColor: 'bg-[#3C7588]',
+          duration: 1500,
+        });
+        this.saved.emit();
+      },
     });
   }
 }

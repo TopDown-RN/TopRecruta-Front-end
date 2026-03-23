@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from 'ngx-toast-lib';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService,
   ) {
     this.loginForm = this.fb.nonNullable.group({
       username: ['', Validators.required],
@@ -33,6 +35,15 @@ export class LoginComponent {
     this.auth.login(username, password).subscribe({
       next: (ok) => {
         if (ok) {
+          this.toast.add({
+            title: 'Bem-vindo!',
+            message: 'Você está autenticado.',
+            type: 'custom',
+            icon: 'tabler:user-check',
+            iconColor: 'text-white',
+            bgColor: 'bg-[#3C7588]',
+            duration: 1500,
+          });
           void this.router.navigate(['/users']);
         } else {
           this.errorMessage = 'Usuário ou senha inválidos. Tente novamente.';
