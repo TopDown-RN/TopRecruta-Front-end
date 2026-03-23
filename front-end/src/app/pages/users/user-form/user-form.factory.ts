@@ -8,7 +8,7 @@ export function buildUserFormGroup(fb: NonNullableFormBuilder) {
     funcao: ['', [Validators.required]],
     dataNascimento: ['', [Validators.required, birthDateBrValidator()]],
     genero: fb.control<'M' | 'F'>('M', [Validators.required]),
-    cep: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+    cep: ['', [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)]],
     logradouro: [{ value: '', disabled: true }, [Validators.required]],
     bairro: [{ value: '', disabled: true }, [Validators.required]],
     cidade: [{ value: '', disabled: true }, [Validators.required]],

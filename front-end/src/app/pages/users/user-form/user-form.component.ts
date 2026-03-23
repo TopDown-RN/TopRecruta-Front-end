@@ -78,7 +78,7 @@ export class UserFormComponent implements OnInit {
         funcao: user.funcao ?? '',
         dataNascimento: isoDateToBirthDisplay(user.dataNascimento),
         genero: user.genero ?? 'M',
-        cep: CepService.normalizeCep(user.cep),
+        cep: CepService.maskCep(user.cep),
         logradouro: user.logradouro ?? '',
         bairro: user.bairro ?? '',
         cidade: user.cidade ?? '',
@@ -178,7 +178,7 @@ export class UserFormComponent implements OnInit {
   onCepBlur(): void {
     const value = this.form.controls.cep.value ?? '';
     if (CepService.isValidCepFormat(value)) {
-      this.form.controls.cep.setValue(CepService.normalizeCep(value), {
+      this.form.controls.cep.setValue(CepService.maskCep(value), {
         emitEvent: false,
       });
     }
@@ -187,7 +187,8 @@ export class UserFormComponent implements OnInit {
   onCepInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const digits = input.value.replace(/\D/g, '').slice(0, 8);
-    this.form.controls.cep.setValue(digits, { emitEvent: true });
+    const masked = CepService.maskCep(digits);
+    this.form.controls.cep.setValue(masked, { emitEvent: true });
   }
 
   onDataNascimentoInput(event: Event): void {

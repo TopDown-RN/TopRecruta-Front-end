@@ -66,7 +66,7 @@
             <label for="cep" class="block text-sm font-medium text-[#6C6C6C] mb-1">CEP</label>
             <div class="relative">
               <input id="cep" type="text" formControlName="cep" placeholder="Digite o CEP" inputmode="numeric"
-                maxlength="8" (input)="onCepInput($event)" (blur)="onCepBlur()"
+                maxlength="9" (input)="onCepInput($event)" (blur)="onCepBlur()"
                 class="w-full rounded-md border border-[#E5E5E5] bg-[#FFFFFF] px-3 py-2 text-sm placeholder:text-[#CDCDCD] transition-colors focus:outline-none focus:ring-2 focus:ring-[#048ABF]/50 focus:ring-offset-0"
                 [class.border-red-500]="(form.get('cep')?.invalid && form.get('cep')?.touched) || cepError"
                 [class.border-[#E5E5E5]]="!(form.get('cep')?.invalid && form.get('cep')?.touched) && !cepError" />
