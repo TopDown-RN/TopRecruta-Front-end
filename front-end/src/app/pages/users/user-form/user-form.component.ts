@@ -142,11 +142,12 @@ export class UserFormComponent implements OnInit {
               this.cepLoading = false;
               if (address) {
                 this.form.patchValue({
-                  logradouro: address.logradouro,
-                  bairro: address.bairro,
-                  cidade: address.cidade,
-                  estado: address.estado,
+                  logradouro: address.logradouro ?? '',
+                  bairro: address.bairro ?? '',
+                  cidade: address.cidade ?? '',
+                  estado: address.estado ?? '',
                 });
+
                 this.cepError = null;
               } else {
                 this.cepError = 'CEP não encontrado.';
@@ -222,12 +223,6 @@ export class UserFormComponent implements OnInit {
     if (this.form.invalid) return;
 
     const raw = this.form.getRawValue() as UserFormRawValue;
-    const cepDigits = CepService.normalizeCep(raw.cep);
-    if (cepDigits.length === 8 && !raw.logradouro?.trim()) {
-      this.cepError =
-        'Informe um CEP válido e aguarde o preenchimento do endereço.';
-      return;
-    }
 
     const body = buildCreateUserBody(raw);
 

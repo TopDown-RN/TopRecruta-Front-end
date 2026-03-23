@@ -54,7 +54,13 @@
             <div class="md:col-span-2 text-sm text-gray-500">
               <span class="md:hidden font-semibold text-gray-400 mr-2">Endereço</span>
               <div class="break-words whitespace-normal">
-                {{ user.logradouro || '—' }}, {{ user.cidade || '—' }}/{{ user.estado || '—' }}
+                <ng-container *ngIf="user.logradouro?.trim(); else noLogradouro">
+                  {{ user.logradouro }},&nbsp;
+                </ng-container>
+                <ng-template #noLogradouro>
+                  <!-- quando não houver logradouro (CEP não retorna rua), não exibir nada -->
+                </ng-template>
+                {{ user.cidade }}/{{ user.estado }}
               </div>
               <div class="text-xs text-gray-500">
                 CEP: {{ cepLabel(user.cep) }}

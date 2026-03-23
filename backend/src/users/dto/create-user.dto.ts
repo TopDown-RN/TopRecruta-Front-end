@@ -46,15 +46,15 @@ export class CreateUserDto {
   @Matches(/^\d{8}$/)
   cep!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(255)
-  logradouro!: string;
+  logradouro?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(255)
-  bairro!: string;
+  bairro?: string;
 
   @IsString()
   @IsNotEmpty()
