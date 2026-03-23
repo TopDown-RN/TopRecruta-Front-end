@@ -16,7 +16,7 @@ export interface AddressFromCep {
   providedIn: 'root',
 })
 export class CepService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   static isValidCepFormat(cep: string): boolean {
     const digits = cep.replace(/\D/g, '');
@@ -27,7 +27,12 @@ export class CepService {
     return cep.replace(/\D/g, '').slice(0, CEP_LENGTH);
   }
 
-  /** Consulta ViaCEP via API Nest (JWT). */
+  static maskCep(cep: string): string {
+    const digits = CepService.normalizeCep(cep);
+    if (digits.length <= 5) return digits;
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  }
+
   getAddress(cep: string): Observable<AddressFromCep | null> {
     const normalized = CepService.normalizeCep(cep);
 
