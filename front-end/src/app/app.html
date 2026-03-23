@@ -1,7 +1,7 @@
 <div class="min-h-screen flex flex-col">
   <header *ngIf="!isLoginRoute()" class="bg-[#F6F7F8] px-4 py-6 sm:px-6 font-['Montserrat'] border-b border-gray-100">
     <div class="mx-auto w-full max-w-5xl">
-      <nav class="grid grid-cols-1 items-center gap-3 sm:grid-cols-3">
+      <nav class="flex w-full flex-nowrap items-center justify-between gap-3 overflow-x-auto">
         <a routerLink="/users"
           class="inline-flex w-fit cursor-pointer items-center justify-center sm:justify-start sm:justify-self-start gap-2 text-sm font-semibold text-[#000C2F] hover:opacity-90">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
