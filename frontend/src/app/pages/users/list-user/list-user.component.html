@@ -54,7 +54,7 @@
             <div class="md:col-span-2 text-sm text-gray-500">
               <span class="md:hidden font-semibold text-gray-400 mr-2">Endereço</span>
               <div class="break-words whitespace-normal">
-                <ng-container *ngIf="user.logradouro?.trim(); else noLogradouro">
+                <ng-container *ngIf="user.logradouro.trim(); else noLogradouro">
                   {{ user.logradouro }},&nbsp;
                 </ng-container>
                 <ng-template #noLogradouro>
